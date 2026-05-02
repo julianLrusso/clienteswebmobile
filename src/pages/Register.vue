@@ -1,7 +1,7 @@
 <script></script>
 
 <template>
-  <h1>Registrarse</h1>
+  <h1 class="text-3xl mb-4">Registrarse</h1>
 </template>
 
 <style scoped></style>

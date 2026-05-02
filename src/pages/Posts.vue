@@ -1,7 +1,7 @@
 <script></script>
 
 <template>
-  <h1>Chat público</h1>
+  <h1 class="text-3xl mb-4">Publicaciones</h1>
 </template>
 
 <style scoped></style>
