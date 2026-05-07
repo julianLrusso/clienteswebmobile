@@ -1,35 +1,45 @@
 <script>
-import supabase from '@/services/supabase';
+import { getAllPosts, sendPosts, subscribeToPosts } from '@/services/posts';
 
-  export default {
-    name: "Posts",
-    data() {
-      return {
-        messages: [],
+let unsubscribeFromPosts = () => {};
+export default {
+  name: "Posts",
+  data() {
+    return {
+      messages: [],
 
-        newMessage: {
-          body: "",
-          name: "",
-        },
-
-      };
-    },
-    methods: {
-      sendMessages() {
-        this.messages.push({
-          id: this.messages.length,
-          name: this.newMessage.name,
-          body: this.newMessage.body,
-          created_at: new Date(),
-        });
-        this.newMessage.body = '';
+      newMessage: {
+        body: "",
+        name: "",
       },
+
+    };
+  },
+  methods: {
+    async sendMessages() {
+      try {
+        const response = await sendPosts({name: this.newMessage.name, body: this.newMessage.body});
+        console.log(response.message);
+        // poner un alert con el mensaje de ok.
+      } catch (e) {
+        // poner un alert con el mensaje de error.
+      }
+      this.newMessage.body = '';
     },
-    async mounted() {
-      const {data, error} = await supabase.from('public_posts').select();
-      this.messages = data;
+  },
+  async mounted() {
+    unsubscribeFromPosts = subscribeToPosts(newPosts => this.messages.push(newPosts));
+    try {
+      this.messages = await getAllPosts();
+    } catch (e) {
+      // poner un alert con el mensaje de error.
     }
-  }
+    
+  },
+  unmounted() {
+    unsubscribeFromPosts();
+  },
+}
 </script>
 
 <template>
