@@ -1,4 +1,28 @@
-<script></script>
+<script>
+import { logout, subscribeToAuthStateChanges } from './services/auth';
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      user: {
+        id: "",
+        name: "",
+        email: "",
+      }
+      
+    }
+  },
+  methods: {
+  async handleLogout() {
+    await logout();
+  }
+  },
+  mounted() {
+    subscribeToAuthStateChanges(newUserData => this.user = newUserData)
+  }
+}
+</script>
 
 <template>
   <nav class="flex items-center gap-8 p-4 bg-indigo-950 text-amber-50">
@@ -15,6 +39,9 @@
       </li>
       <li>
         <RouterLink to="/registrarse">Registrarse</RouterLink>
+      </li>
+      <li>
+        <form action="#" @submit.prevent="handleLogout"><button class="hover:cursor-pointer">{{user.name}} (Cerrar sesión)</button></form>
       </li>
     </ul>
   </nav>

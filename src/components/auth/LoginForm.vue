@@ -1,15 +1,13 @@
 <script>
-import { register } from '@/services/auth';
-
+import { login } from '@/services/auth';
 
 export default {
-  name: 'Register',
+  name: 'LoginForm',
   data() {
     return {
       user: {
         email: '',
         password: '',
-        name: '',
       },
       loading: false,
     }
@@ -18,31 +16,21 @@ export default {
     async handleSubmit() {
       try {
         this.loading = true;
-        await register({
+        const user = await login({
           email: this.user.email,
-          name: this.user.name,
           password: this.user.password,
         })
+        this.$emit('login', user);
       } catch (e) {
         console.log(e);
       }
     }
   }
 }
-
 </script>
 
 <template>
-  <h1 class="text-3xl mb-4">Registrarse</h1>
-  <form action="#" @submit.prevent="handleSubmit">
-    <div class="mb-3">
-        <label for="name" class="block mb-1">Nombre</label>
-        <input v-model="user.name" 
-        type="text"
-        id="name"
-        class="w-full p-2 border-2 border-indigo-800 rounded"
-        >
-    </div>
+    <form action="#" @submit.prevent="handleSubmit">
     <div class="mb-3">
         <label for="email" class="block mb-1">Email</label>
         <input v-model="user.email" 
@@ -59,8 +47,6 @@ export default {
         class="w-full p-2 border-2 border-indigo-800 rounded"
         >
     </div>
-    <button class="bg-indigo-800 border-indigo-900 text-amber-50 px-4 py-2 rounded-lg">Crear cuenta</button>
+    <button class="bg-indigo-800 border-indigo-900 text-amber-50 px-4 py-2 rounded-lg">Ingresar</button>
   </form>
 </template>
-
-<style scoped></style>
