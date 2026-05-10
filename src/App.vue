@@ -46,7 +46,10 @@ export default {
           <RouterLink to="/publicaciones">Publicaciones</RouterLink>
         </li>
         <li>
-          <form action="#" @submit.prevent="handleLogout"><button class="hover:cursor-pointer">{{user.name}} (Cerrar sesión)</button></form>
+          <RouterLink to="/perfil">{{user.name}}</RouterLink>
+        </li>
+        <li>
+          <form action="#" @submit.prevent="handleLogout"><button class="hover:cursor-pointer">Cerrar sesión</button></form>
         </li>
       </template>
     </ul>

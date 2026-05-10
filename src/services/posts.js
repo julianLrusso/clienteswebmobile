@@ -3,15 +3,15 @@ import supabase from '@/services/supabase';
 /**
  * Crea una publicación en la base de datos
  * 
- * @param {{name: string, body: string}} data 
+ * @param {{body: string}} data 
  * @returns {{status: string, message: string}}
  */
-export async function sendPosts({name, body}) {
-
+export async function sendPosts({body}) {
+    const { data: { user } } = await supabase.auth.getUser();
     const {error} = await supabase
         .from('public_posts')
         .insert({
-            name: name, 
+            user_id: user.id, 
             body: body
         });
 
@@ -29,7 +29,7 @@ export async function sendPosts({name, body}) {
  */
 export async function getAllPosts() {
 
-    const {data, error} = await supabase.from('public_posts').select().order('id', { ascending: false });
+    const {data, error} = await supabase.from('public_posts_with_user').select().order('id', { ascending: false });
 
     if (error) {
         throw new Error("Error al obtener las postulaciones. " + error.message);
@@ -58,4 +58,21 @@ export function subscribeToPosts(callback) {
     postsChannel.subscribe();
 
     return () => postsChannel.unsubscribe();
+}
+
+/**
+ * 
+ * @param {{userId: string}} userId 
+ * @returns 
+ */
+export async function getPostsByUser({userId}) {
+  const { data, error } = await supabase
+    .from('public_posts')
+    .select()
+    .eq('user_id', userId)
+    .order('id', { ascending: false });
+
+  if (error) throw new Error("Error al obtener los posts. " + error.message);
+
+  return data;
 }

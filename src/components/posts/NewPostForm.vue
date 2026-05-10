@@ -1,6 +1,5 @@
 <script>
 import { sendPosts } from '@/services/posts';
-import { subscribeToAuthStateChanges } from '@/services/auth';
 import AlertMessage from '../utils/AlertMessage.vue';
 
 export default {
@@ -10,7 +9,6 @@ export default {
     return {
         newMessage: {
             body: "",
-            name: "",
         },
         user: {
             id: "",
@@ -29,7 +27,7 @@ export default {
   methods: {
     async sendMessages() {
       try {
-        const response = await sendPosts({name: this.newMessage.name, body: this.newMessage.body});
+        const response = await sendPosts({body: this.newMessage.body});
         this.alert = {
           text: response.message,
           colorClasses: "bg-green-100 border-green-600 text-green-800",
@@ -44,10 +42,6 @@ export default {
       this.newMessage.body = '';
     },
   },
-  mounted() {
-    subscribeToAuthStateChanges(newUserData => this.user = newUserData);
-    this.newMessage.name = this.user.name;
-  }
 }
 </script>
 
@@ -62,7 +56,7 @@ export default {
         <div class="mb-3">
           <label for="message" class="block mb-1">Mensaje</label>
           <textarea v-model="newMessage.body" 
-            id="message" 
+            id="message"
             class="w-full p-2 border-2 border-indigo-800 rounded"
           ></textarea>
         </div>

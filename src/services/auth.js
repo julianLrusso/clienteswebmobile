@@ -15,7 +15,7 @@ const observers = [];
  * @returns {import("@supabase/supabase-js").User} 
  */
 export async function register({email, name, password}){
-    
+
     const {data, error} = await supabase.auth.signUp({
         email, 
         password, 
@@ -73,6 +73,23 @@ export async function logout() {
     notifyAll();
 
     if(error) throw new Error(error.message);
+}
+
+export async function updateName(name) {
+  const { error } = await supabase.auth.updateUser({
+    data: { name }
+  });
+
+  if (error) throw new Error("Error al actualizar el nombre. " + error.message);
+
+  userData = { ...userData, name };
+  notifyAll();
+}
+
+
+export async function updatePassword(password) {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw new Error("Error al actualizar la contraseña. " + error.message);
 }
 
 /**
