@@ -16,6 +16,7 @@ export default {
   methods: {
   async handleLogout() {
     await logout();
+    this.$router.push('/ingresar');
   }
   },
   mounted() {
@@ -31,18 +32,23 @@ export default {
       <li>
         <RouterLink to="/">Home</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/publicaciones">Publicaciones</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/ingresar">Ingresar</RouterLink>
-      </li>
-      <li>
-        <RouterLink to="/registrarse">Registrarse</RouterLink>
-      </li>
-      <li>
-        <form action="#" @submit.prevent="handleLogout"><button class="hover:cursor-pointer">{{user.name}} (Cerrar sesión)</button></form>
-      </li>
+      
+      <template v-if="!user.id">
+        <li>
+          <RouterLink to="/ingresar">Ingresar</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/registrarse">Registrarse</RouterLink>
+        </li>
+      </template>
+      <template v-else>
+        <li>
+          <RouterLink to="/publicaciones">Publicaciones</RouterLink>
+        </li>
+        <li>
+          <form action="#" @submit.prevent="handleLogout"><button class="hover:cursor-pointer">{{user.name}} (Cerrar sesión)</button></form>
+        </li>
+      </template>
     </ul>
   </nav>
 

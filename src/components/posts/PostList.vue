@@ -1,0 +1,62 @@
+<script>
+import { getAllPosts, subscribeToPosts } from '@/services/posts';
+import AlertMessage from '../utils/AlertMessage.vue';
+
+let unsubscribeFromPosts = () => {};
+export default {
+  name: "PostList",
+  components: { AlertMessage },
+  data() {
+    return {
+      messages: [],
+      alert: { 
+        text: "", 
+        colorClasses: "" 
+      },
+    };
+  },
+  props: {
+    sectionClasses: String,
+  },
+  async mounted() {
+    unsubscribeFromPosts = subscribeToPosts(newPosts => this.messages.unshift(newPosts));
+    try {
+      this.messages = await getAllPosts();
+    } catch (e) {
+        console.log(e);
+        this.alert = {
+            text: 'Ocurrió un error, por favor refresque la página.',
+            colorClasses: "bg-red-100 border-red-600 text-red-800",
+        };
+    }
+    
+  },
+  unmounted() {
+    unsubscribeFromPosts();
+  },
+}
+</script>
+
+<template>
+    <section :class="sectionClasses">
+        <AlertMessage :text="alert.text" :color-classes="alert.colorClasses" />
+
+        <h2 class="sr-only">Listado de publicaciones</h2>
+
+        <ol class="p-2">
+
+        <li v-for="message in messages"
+            :key="message.id" 
+            class="p-2 border-2 border-indigo-800 m-2 rounded-lg bg-mist-200"
+            >
+            <div><b>{{ message.name }}</b>:</div>
+            <div>{{ message.body }}</div>
+            <div class="text-sm text-mist-600">Enviado el {{ message.created_at }}</div>
+        </li>
+
+        </ol>
+
+    </section>
+</template>
+
+<style scoped></style>

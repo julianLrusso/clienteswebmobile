@@ -1,29 +1,32 @@
 <script>
-import { login } from '@/services/auth';
+import { register } from '@/services/auth';
 import AlertMessage from '../utils/AlertMessage.vue';
 
+
 export default {
-  name: 'LoginForm',
+  name: 'RegisterForm',
   components: { AlertMessage },
   data() {
     return {
-      user: {
-        email: '',
-        password: '',
-      },
-      loading: false,
-      alert: { 
-        text: "", 
-        colorClasses: "" 
-      },
+        user: {
+            email: '',
+            password: '',
+            name: '',
+        },
+        loading: false,
+        alert: { 
+            text: "", 
+            colorClasses: "" 
+        },
     }
   },
   methods: {
     async handleSubmit() {
       try {
         this.loading = true;
-        await login({
+        await register({
           email: this.user.email,
+          name: this.user.name,
           password: this.user.password,
         })
         this.$router.push('/');
@@ -37,11 +40,20 @@ export default {
     }
   }
 }
+
 </script>
 
 <template>
-    <AlertMessage :text="alert.text" :color-classes="alert.colorClasses" />
-    <form action="#" @submit.prevent="handleSubmit">
+  <AlertMessage :text="alert.text" :color-classes="alert.colorClasses" />
+  <form action="#" @submit.prevent="handleSubmit">
+    <div class="mb-3">
+        <label for="name" class="block mb-1">Nombre</label>
+        <input v-model="user.name" 
+        type="text"
+        id="name"
+        class="w-full p-2 border-2 border-indigo-800 rounded"
+        >
+    </div>
     <div class="mb-3">
         <label for="email" class="block mb-1">Email</label>
         <input v-model="user.email" 
@@ -58,6 +70,8 @@ export default {
         class="w-full p-2 border-2 border-indigo-800 rounded"
         >
     </div>
-    <button class="bg-indigo-800 border-indigo-900 text-amber-50 px-4 py-2 rounded-lg">Ingresar</button>
+    <button class="bg-indigo-800 border-indigo-900 text-amber-50 px-4 py-2 rounded-lg">Crear cuenta</button>
   </form>
 </template>
+
+<style scoped></style>

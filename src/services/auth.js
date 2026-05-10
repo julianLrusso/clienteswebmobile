@@ -15,7 +15,7 @@ const observers = [];
  * @returns {import("@supabase/supabase-js").User} 
  */
 export async function register({email, name, password}){
-
+    
     const {data, error} = await supabase.auth.signUp({
         email, 
         password, 
