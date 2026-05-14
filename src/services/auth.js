@@ -61,6 +61,10 @@ export async function login({email, password}) {
     return data.user;
 }
 
+/**
+ * Cierra la sesión
+ * @returns {void}
+ */
 export async function logout() {
     const {error} = await supabase.auth.signOut();
 
@@ -75,6 +79,11 @@ export async function logout() {
     if(error) throw new Error(error.message);
 }
 
+/**
+ * Cambia el nombre del usuario autenticado
+ * @param {string} name 
+ * @returns {void}
+ */
 export async function updateName(name) {
   const { error } = await supabase.auth.updateUser({
     data: { name }
@@ -86,15 +95,20 @@ export async function updateName(name) {
   notifyAll();
 }
 
-
+/**
+ * Cambiala la contraseña del usuario autenticado
+ * @param {string} password 
+ * @returns {void}
+ */
 export async function updatePassword(password) {
     const { error } = await supabase.auth.updateUser({ password });
     if (error) throw new Error("Error al actualizar la contraseña. " + error.message);
 }
 
 /**
- * 
+ * Suscribe a los observers al estado de autenticación
  * @param {(userData: {id: null|string, name: null|string, email: null|string}) => void} observer 
+ * @returns {void}
  */
 export function subscribeToAuthStateChanges(observer) {
     observers.push(observer);
@@ -102,13 +116,18 @@ export function subscribeToAuthStateChanges(observer) {
 }
 
 /**
- * 
+ * Notifica al observers sobre los cambios
  * @param {(userData: {id: null|string, name: null|string, email: null|string}) => void} observer 
+ * @returns {void}
  */
 function notify(observer) {
     observer({...userData});
 }
 
+/**
+ * Notifica a todos los observers de los cambios
+ * @returns {void}
+ */
 function notifyAll(){
     observers.forEach(observer => notify(observer));
 }
