@@ -15,7 +15,7 @@ export default {
   },
   methods: {
   async handleLogout() {
-    await logout();
+    logout();
     this.$router.push('/ingresar');
   }
   },

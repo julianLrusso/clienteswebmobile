@@ -1,5 +1,5 @@
 <script>
-import { getProfile } from '@/services/profile';
+import { getCurrentUser } from '@/services/auth';
 import { getPostsByUser } from '@/services/posts';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
 
@@ -14,7 +14,7 @@ export default {
   },
   async mounted() {
     try {
-      const user = await getProfile();
+      const user = await getCurrentUser();
       this.posts = await getPostsByUser({userId: user.id});
     } catch (e) {
       this.error = e.message;

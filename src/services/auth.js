@@ -8,6 +8,31 @@ let userData = {
 
 const observers = [];
 
+if(localStorage.getItem('user')){
+    userData = JSON.parse(localStorage.getItem('user'));
+}
+
+getCurrentUser();
+
+/**
+ * Obtiene el usuario logueado
+ * @returns {import("@supabase/supabase-js").User}
+ */
+export async function getCurrentUser() {
+    const {data, error} = await supabase.auth.getUser();
+
+    if (error) throw new Error("Error al obtener el usuario. " + error.message);
+    if (data.user === null) return;
+
+   updateUserData({
+        id: data.user.id,
+        name: data.user.user_metadata.name,
+        email: data.user.email
+    })
+
+    return user;
+}
+
 
 /**
  * Registra al usuario en la base de datos
@@ -28,14 +53,11 @@ export async function register({email, name, password}){
 
     if(error) throw new Error(error.message);
 
-    userData = {
-        ...userData,
+    updateUserData({
         id: data.user.id,
         name: data.user.user_metadata.name,
         email: data.user.email
-    }
-    notifyAll();
-
+    })
     return data.user;
 }
 
@@ -49,14 +71,12 @@ export async function login({email, password}) {
 
     if(error) throw new Error(error.message);
 
-    userData = {
-        ...userData,
+
+    updateUserData({
         id: data.user.id,
         name: data.user.user_metadata.name,
         email: data.user.email
-    }
-    
-    notifyAll();
+    });
 
     return data.user;
 }
@@ -68,13 +88,11 @@ export async function login({email, password}) {
 export async function logout() {
     const {error} = await supabase.auth.signOut();
 
-    userData = {
-        ...userData,
+    updateUserData({
         id: null,
         name: null,
         email: null
-    }
-    notifyAll();
+    });
 
     if(error) throw new Error(error.message);
 }
@@ -91,8 +109,7 @@ export async function updateName(name) {
 
   if (error) throw new Error("Error al actualizar el nombre. " + error.message);
 
-  userData = { ...userData, name };
-  notifyAll();
+  updateUserData({name: name});
 }
 
 /**
@@ -130,4 +147,20 @@ function notify(observer) {
  */
 function notifyAll(){
     observers.forEach(observer => notify(observer));
+}
+
+/**
+ * Actualiza el userData y avisa a los observers. También guarda los datos en localstorage 
+ * @param {{id: null|string, email: null|string, name: null|string }} newUserData 
+ * @returns {void}
+ */
+function updateUserData(newUserData) {
+    userData = {
+        ...userData,
+        ...newUserData
+    }
+
+    notifyAll();
+
+    userData.id !== null ? localStorage.setItem('user', JSON.stringify(userData)) : localStorage.removeItem('user');
 }

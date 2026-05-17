@@ -1,5 +1,5 @@
 <script>
-import { getProfile } from '@/services/profile';
+import { getCurrentUser } from '@/services/auth';
 import ChangeNameForm from '@/components/profile/ChangeNameForm.vue';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm.vue';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
@@ -16,7 +16,7 @@ export default {
   },
   async mounted() {
     try {
-      const user = await getProfile();
+      const user = getCurrentUser();
       this.name = user.user_metadata.name;
     } catch (e) {
       this.error = e.message;
