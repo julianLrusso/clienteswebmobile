@@ -16,7 +16,8 @@ export default {
   },
   async mounted() {
     try {
-      const user = getCurrentUser();
+      const user = await getCurrentUser();
+      console.log(user);
       this.name = user.user_metadata.name;
     } catch (e) {
       this.error = e.message;

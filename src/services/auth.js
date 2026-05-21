@@ -30,7 +30,7 @@ export async function getCurrentUser() {
         email: data.user.email
     })
 
-    return user;
+    return data.user;
 }
 
 
