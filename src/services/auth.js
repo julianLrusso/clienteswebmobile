@@ -1,9 +1,12 @@
+import { getUserProfileById } from "./profile";
 import supabase from "./supabase";
 
 let userData = {
     id: null,
     email:null,
-    name: null
+    name: null,
+    bio: null,
+    profileFullyLoaded: false,
 }
 
 const observers = [];
@@ -12,7 +15,45 @@ if(localStorage.getItem('user')){
     userData = JSON.parse(localStorage.getItem('user'));
 }
 
-getCurrentUser();
+supabase.auth.onAuthStateChange(async (event, session) => {
+    if(session){
+
+        // const {data, error} = await supabase.auth.getUser();
+
+        // if (data.user === null || error) {
+        //     updateUserData({
+        //         id: null,
+        //         email:null,
+        //         name: null,
+        //         bio: null,
+        //         profileFullyLoaded: false,
+        //     })
+        //     return ;
+        // }
+
+        updateUserData({
+            id: session.user.id,
+            email: session.user.email,
+        })
+
+        if (userData.profileFullyLoaded) return;
+
+        getUserProfileById(userData.id)
+            .then(profile => updateUserData({
+                name: profile.name,
+                bio: profile.bio,
+                profileFullyLoaded: true,
+            }))
+    } else {
+         updateUserData({
+            id: null,
+            email:null,
+            name: null,
+            bio: null,
+            profileFullyLoaded: false,
+        })
+    }
+});
 
 /**
  * Obtiene el usuario logueado
@@ -24,15 +65,8 @@ export async function getCurrentUser() {
     if (error) throw new Error("Error al obtener el usuario. " + error.message);
     if (data.user === null) return;
 
-   updateUserData({
-        id: data.user.id,
-        name: data.user.user_metadata.name,
-        email: data.user.email
-    })
-
     return data.user;
 }
-
 
 /**
  * Registra al usuario en la base de datos
@@ -53,11 +87,6 @@ export async function register({email, name, password}){
 
     if(error) throw new Error(error.message);
 
-    updateUserData({
-        id: data.user.id,
-        name: data.user.user_metadata.name,
-        email: data.user.email
-    })
     return data.user;
 }
 
@@ -72,12 +101,6 @@ export async function login({email, password}) {
     if(error) throw new Error(error.message);
 
 
-    updateUserData({
-        id: data.user.id,
-        name: data.user.user_metadata.name,
-        email: data.user.email
-    });
-
     return data.user;
 }
 
@@ -88,12 +111,6 @@ export async function login({email, password}) {
 export async function logout() {
     const {error} = await supabase.auth.signOut();
 
-    updateUserData({
-        id: null,
-        name: null,
-        email: null
-    });
-
     if(error) throw new Error(error.message);
 }
 
@@ -103,13 +120,10 @@ export async function logout() {
  * @returns {void}
  */
 export async function updateName(name) {
-  const { error } = await supabase.auth.updateUser({
-    data: { name }
-  });
+  const { error } = await supabase.from('user_profiles').update({name: name}).eq('id', userData.id).select();
 
   if (error) throw new Error("Error al actualizar el nombre. " + error.message);
 
-  updateUserData({name: name});
 }
 
 /**

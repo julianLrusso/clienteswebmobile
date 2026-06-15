@@ -1,11 +1,13 @@
 <script>
-import { getCurrentUser } from '@/services/auth';
 import { getPostsByUser } from '@/services/posts';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
 
 export default {
   name: "UserPostList",
   components: { AlertMessage },
+  props: {
+    user_id: String,
+  },
   data() {
     return {
       posts: [],
@@ -14,8 +16,7 @@ export default {
   },
   async mounted() {
     try {
-      const user = await getCurrentUser();
-      this.posts = await getPostsByUser({userId: user.id});
+      this.posts = await getPostsByUser({userId: this.user_id});
     } catch (e) {
       this.error = e.message;
     }
