@@ -1,6 +1,7 @@
 <script>
 import { getAllPosts, subscribeToPosts } from '@/services/posts';
 import AlertMessage from '../utils/AlertMessage.vue';
+import { formatDate } from '@/helpers/date.js';
 
 let unsubscribeFromPosts = () => {};
 export default {
@@ -17,6 +18,9 @@ export default {
   },
   props: {
     sectionClasses: String,
+  },
+  methods: {
+    formatDate,
   },
   async mounted() {
     unsubscribeFromPosts = subscribeToPosts(newPosts => this.messages.unshift(newPosts));
@@ -51,7 +55,7 @@ export default {
             >
             <RouterLink :to="`usuario/${message.user_id}`"><b class="hover:text-indigo-800">{{ message.name }}</b>:</RouterLink>
             <div>{{ message.body }}</div>
-            <div class="text-sm text-mist-600">Enviado el {{ message.created_at }}</div>
+            <div class="text-sm text-mist-600">Enviado el {{this.formatDate( message.created_at )}}</div>
         </li>
 
         </ol>

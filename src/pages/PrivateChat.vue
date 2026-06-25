@@ -1,4 +1,5 @@
 <script>
+import { formatDate } from '@/helpers/date';
 import { subscribeToAuthStateChanges } from '@/services/auth';
 import { getPrivateMessages, sendPrivateChatMessage, subscribeToPrivateChatMessages } from '@/services/private-chat';
 import { getUserProfileById } from '@/services/profile';
@@ -42,7 +43,8 @@ export default {
             } catch (error) {
                 
             }
-        }
+        },
+        formatDate,
     },
     mounted() {
         try {
@@ -88,18 +90,19 @@ export default {
 
 <template>
     <h1 class="text-3xl mb-4">Chat con {{ otherUser.name }}</h1>
-    <section class="w-full border-2 border-indigo-900 rounded min-h-100 bg-mist-300 max-h-150 overflow-y-auto">
+    <section class="border-2 border-indigo-900 rounded h-100 bg-mist-300 max-h-150 overflow-y-auto">
 
         <h2 class="sr-only">Listado de publicaciones</h2>
 
-        <ol class="p-2">
+        <ol class="flex flex-col gap-2 p-2">
 
         <li v-for="message in messages"
             :key="message.id" 
-            class="p-2 border-2 border-indigo-800 m-2 rounded-lg bg-mist-200"
+            :class="`${message.sender_id == this.user.id ? 'self-end' : ''}`"
+            class="p-2 border-2 border-indigo-800 m-2 rounded-lg bg-mist-200 max-w-xl "
             >
             <div>{{ message.body }}</div>
-            <div class="text-sm text-mist-600">Enviado el {{ message.created_at }}</div>
+            <div class="text-sm text-mist-600">Enviado el {{ this.formatDate( message.created_at )}}</div>
         </li>
 
         </ol>

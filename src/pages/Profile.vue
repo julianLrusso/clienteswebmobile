@@ -40,7 +40,7 @@ export default {
   <AlertMessage v-if="error" :text="error" color-classes="bg-red-100 border-red-600 text-red-800" class="mb-4" />
 
   <section>
-    
+    <h2 class="sr-only">Mi biografía</h2>
     <div>
       <p>{{ user.bio }}</p>
     </div>

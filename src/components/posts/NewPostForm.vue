@@ -48,6 +48,7 @@ export default {
 <template>
     <section :class="sectionClasses">
       <AlertMessage :text="alert.text" :color-classes="alert.colorClasses" />
+      <h2 class="sr-only">Enviar mensaje</h2>
       <form action="#"
         @submit.prevent="sendMessages"
         class="max-w-150 mx-auto"

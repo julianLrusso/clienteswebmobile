@@ -1,5 +1,7 @@
 import supabase from "./supabase";
 
+const privateChatCache = {};
+
 /**
  * Ordena 2 ids
  * @param {string} id1 
@@ -76,11 +78,20 @@ async function fetchPrivateChatFor({sender_id, receiver_id}) {
  * @returns {Promise<{id: string, user_id1: string, user_id2: string, created_at: string}>}
  */
 async function fetchOrCreatePrivateChatFor({sender_id, receiver_id}) {
+
+    let cacheKey = [sender_id, receiver_id].sort().join('_');
+
+    if(privateChatCache[cacheKey]) {
+        return privateChatCache[cacheKey];
+    }
+
     let chat = await fetchPrivateChatFor({sender_id, receiver_id});
 
     if(!chat){
         chat = await createPrivateChat({sender_id, receiver_id});
     }
+
+    privateChatCache[cacheKey] = chat;
 
    return chat;
 }
