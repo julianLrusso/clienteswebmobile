@@ -1,4 +1,4 @@
-import { getUserProfileById } from "./profile";
+import { createUserProfile, getUserProfileById, updateUserProfile } from "./profile";
 import supabase from "./supabase";
 
 let userData = {
@@ -38,7 +38,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
         if (userData.profileFullyLoaded) return;
 
-        getUserProfileById(userData.id)
+        await getUserProfileById(userData.id)
             .then(profile => updateUserData({
                 name: profile.name,
                 bio: profile.bio,
@@ -87,6 +87,8 @@ export async function register({email, name, password}){
 
     if(error) throw new Error(error.message);
 
+    await createUserProfile({id: data.user.id, email: email, name: name})
+
     return data.user;
 }
 
@@ -115,15 +117,22 @@ export async function logout() {
 }
 
 /**
- * Cambia el nombre del usuario autenticado
- * @param {string} name 
+ * Actualiza la información del perfil del usuario.
+ * @param {{bio: null|string, name: null|string}} data 
  * @returns {void}
  */
-export async function updateName(name) {
-  const { error } = await supabase.from('user_profiles').update({name: name}).eq('id', userData.id).select();
+export async function updateCurrentUserProfile(data) {
 
-  if (error) throw new Error("Error al actualizar el nombre. " + error.message);
+    // Tuve que hacer esto porque separé todo en componentes distintos entonces uno sí o sí me va a llegar vacío.
+    // Tal vez no fue buena idea separar todo en muchos componentes.
+    // Así se aprende.
+     const filtered = Object.fromEntries(
+        Object.entries(data).filter(([_, value]) => value != null && value !== "")
+    );
 
+    await updateUserProfile(userData.id, filtered);
+
+    updateUserData(filtered);
 }
 
 /**
@@ -138,7 +147,7 @@ export async function updatePassword(password) {
 
 /**
  * Suscribe a los observers al estado de autenticación
- * @param {(userData: {id: null|string, name: null|string, email: null|string}) => void} observer 
+ * @param {(userData: {id: null|string, name: null|string, email: null|string, bio: null|string}) => void} observer 
  * @returns {void}
  */
 export function subscribeToAuthStateChanges(observer) {
@@ -148,7 +157,7 @@ export function subscribeToAuthStateChanges(observer) {
 
 /**
  * Notifica al observers sobre los cambios
- * @param {(userData: {id: null|string, name: null|string, email: null|string}) => void} observer 
+ * @param {(userData: {id: null|string, name: null|string, email: null|string, bio: null|string}) => void} observer 
  * @returns {void}
  */
 function notify(observer) {

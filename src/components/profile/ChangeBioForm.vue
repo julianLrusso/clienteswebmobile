@@ -3,26 +3,26 @@ import { updateCurrentUserProfile } from '@/services/auth';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
 
 export default {
-  name: "ChangeNameForm",
+  name: "ChangeBioForm",
   components: { AlertMessage },
   props: {
-    initialName: {
+    initialBio: {
       type: String,
       default: "",
     },
   },
   data() {
     return {
-      name: this.initialName,
+      bio: this.initialBio,
       alert: { text: "", colorClasses: "" },
     };
   },
   methods: {
-    async handleUpdateName() {
+    async handleUpdateBio() {
       try {
-        await updateCurrentUserProfile({name: this.name});
+        await updateCurrentUserProfile({bio: this.bio});
         this.alert = {
-          text: "Nombre actualizado con éxito.",
+          text: "Biografía actualizada con éxito.",
           colorClasses: "bg-green-100 border-green-600 text-green-800",
         };
       } catch (e) {
@@ -34,10 +34,10 @@ export default {
     },
   },
   watch: {
-    initialName: {
+    initialBio: {
       immediate: true,
       handler(newVal) {
-        this.name = newVal;
+        this.bio = newVal;
       },
     },
   },
@@ -46,17 +46,17 @@ export default {
 
 <template>
   <div class="min-w-150">
-    <h2 class="text-xl mb-3">Cambiar nombre</h2>
+    <h2 class="text-xl mb-3">Cambiar Biografía</h2>
     <AlertMessage :text="alert.text" :color-classes="alert.colorClasses" class="mb-3" />
-    <form @submit.prevent="handleUpdateName" class="flex flex-col gap-3">
+    <form @submit.prevent="handleUpdateBio" class="flex flex-col gap-3">
       <input
-        v-model="name"
+        v-model="bio"
         type="text"
         class="w-full p-2 border-2 border-indigo-800 rounded"
-        placeholder="Nombre"
+        placeholder="Biografía"
       />
       <button class="bg-indigo-800 text-amber-50 px-4 py-2 rounded-lg">
-        Guardar nombre
+        Guardar Biografía
       </button>
     </form>
   </div>

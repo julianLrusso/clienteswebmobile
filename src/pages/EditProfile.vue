@@ -1,11 +1,13 @@
 <script>
 import { subscribeToAuthStateChanges } from '@/services/auth';
+import ChangeNameForm from '@/components/profile/ChangeNameForm.vue';
+import ChangePasswordForm from '@/components/profile/ChangePasswordForm.vue';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
-import PostList from '@/components/profile/UserPostList.vue';
+import ChangeBioForm from '@/components/profile/ChangeBioForm.vue';
 
 export default {
   name: "Profile",
-  components: { AlertMessage, PostList },
+  components: { ChangeNameForm, ChangePasswordForm, AlertMessage, ChangeBioForm },
   data() {
     return {
      user: {
@@ -28,26 +30,14 @@ export default {
 </script>
 
 <template>
-  <div class="flex mb-4 justify-between">
-    <h1 class="text-3xl">Perfil</h1>
-
-    <RouterLink class="bg-transparent hover:bg-indigo-800 text-indigo-950 font-semibold hover:text-white py-2 px-4 border border-indigo-800 hover:border-transparent rounded" 
-      to="/editar-perfil">
-        Editar
-    </RouterLink>
-  </div>
+  <h1 class="text-3xl mb-4">Editar perfil</h1>
 
   <AlertMessage v-if="error" :text="error" color-classes="bg-red-100 border-red-600 text-red-800" class="mb-4" />
 
-  <section>
-    
-    <div>
-      <p>{{ user.bio }}</p>
-    </div>
-  </section>
-
-  <section class="mt-5">
-    <PostList v-if="user.id" :user_id="user.id"/>
+  <section class="max-w-2xl flex gap-6">
+    <ChangeNameForm :initial-name="user.name" />
+    <ChangePasswordForm />
+    <ChangeBioForm :initial-bio="user.bio"/>
   </section>
 
 </template>

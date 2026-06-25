@@ -3,6 +3,7 @@ import Login from '@/pages/Login.vue';
 import Profile from '@/pages/Profile.vue';
 import Posts from '@/pages/Posts.vue';
 import Register from '@/pages/Register.vue';
+import EditProfile from '@/pages/EditProfile.vue';
 import { createRouter, createWebHistory } from 'vue-router'
 import { subscribeToAuthStateChanges } from '@/services/auth';
 
@@ -12,6 +13,7 @@ const routes = [
   {path: '/ingresar', component: Login},
   {path: '/registrarse', component: Register},
   {path: '/perfil', component: Profile, meta: {auth: true}},
+  {path: '/editar-perfil', component: EditProfile, meta: {auth: true}},
 ];
 
 const router = createRouter({
