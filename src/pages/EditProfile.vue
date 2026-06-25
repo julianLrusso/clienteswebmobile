@@ -4,10 +4,11 @@ import ChangeNameForm from '@/components/profile/ChangeNameForm.vue';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm.vue';
 import AlertMessage from '@/components/utils/AlertMessage.vue';
 import ChangeBioForm from '@/components/profile/ChangeBioForm.vue';
+import ChangePictureForm from '@/components/profile/ChangePictureForm.vue';
 
 export default {
   name: "Profile",
-  components: { ChangeNameForm, ChangePasswordForm, AlertMessage, ChangeBioForm },
+  components: { ChangeNameForm, ChangePasswordForm, AlertMessage, ChangeBioForm, ChangePictureForm },
   data() {
     return {
      user: {
@@ -34,10 +35,14 @@ export default {
 
   <AlertMessage v-if="error" :text="error" color-classes="bg-red-100 border-red-600 text-red-800" class="mb-4" />
 
-  <section class="max-w-2xl flex gap-6">
-    <ChangeNameForm :initial-name="user.name" />
-    <ChangePasswordForm />
-    <ChangeBioForm :initial-bio="user.bio"/>
+  <section>
+    <div class="flex flex-wrap gap-4 p-2">
+      <ChangeNameForm :initial-name="user.name" />
+      <ChangePasswordForm />
+      <ChangeBioForm :initial-bio="user.bio"/>
+      <ChangePictureForm />
+    </div>
+    
   </section>
 
 </template>

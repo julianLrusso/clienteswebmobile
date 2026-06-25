@@ -1,4 +1,5 @@
 import { createUserProfile, getUserProfileById, updateUserProfile } from "./profile";
+import { getFileUrl, uploadFile } from "./storage";
 import supabase from "./supabase";
 
 let userData = {
@@ -6,6 +7,7 @@ let userData = {
     email:null,
     name: null,
     bio: null,
+    photo_url: null,
     profileFullyLoaded: false,
 }
 
@@ -49,6 +51,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
                 updateUserData({
                 name: profile.name,
                 bio: profile.bio,
+                photo_url: profile.photo_url,
                 profileFullyLoaded: true,
                 })
             }
@@ -59,6 +62,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
             email:null,
             name: null,
             bio: null,
+            photo_url: null,
             profileFullyLoaded: false,
         })
     }
@@ -127,7 +131,7 @@ export async function logout() {
 
 /**
  * Actualiza la información del perfil del usuario.
- * @param {{bio: null|string, name: null|string}} data 
+ * @param {{bio?: null|string, name?: null|string}} data 
  * @returns {void}
  */
 export async function updateCurrentUserProfile(data) {
@@ -142,6 +146,24 @@ export async function updateCurrentUserProfile(data) {
     await updateUserProfile(userData.id, filtered);
 
     updateUserData(filtered);
+}
+
+/**
+ * 
+ * @param {File} file 
+ */
+export async function updateCurrentUserPhoto(file) {
+    const photoName = `${userData.id}/avatar.jpg`
+    await uploadFile(file, photoName);
+
+    const photo_url = getFileUrl(photoName);
+
+    if(userData.photo_url !== null) {
+        deleteFile(`${userData.id}/${userData.photo_url.split('/').pop()}`);
+    }
+    
+    updateUserProfile(userData.id, {photo_url});
+    updateUserData({photo_url});
 }
 
 /**

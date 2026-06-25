@@ -13,6 +13,7 @@ export default {
         name: "",
         email: "",
         bio: "",
+        photo_url: null,
       },
       error: null,
     };
@@ -41,7 +42,8 @@ export default {
 
   <section>
     <h2 class="sr-only">Mi biografía</h2>
-    <div>
+    <div class="flex gap-5">
+      <img v-if="user.photo_url" :src="user.photo_url" alt="Foto de perfil del usuario" class="max-w-full max-h-48">
       <p>{{ user.bio }}</p>
     </div>
   </section>
