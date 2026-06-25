@@ -49,7 +49,7 @@ export default {
             :key="message.id" 
             class="p-2 border-2 border-indigo-800 m-2 rounded-lg bg-mist-200"
             >
-            <div><b>{{ message.name }}</b>:</div>
+            <RouterLink :to="`usuario/${message.user_id}`"><b class="hover:text-indigo-800">{{ message.name }}</b>:</RouterLink>
             <div>{{ message.body }}</div>
             <div class="text-sm text-mist-600">Enviado el {{ message.created_at }}</div>
         </li>

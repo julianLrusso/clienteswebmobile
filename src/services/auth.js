@@ -38,12 +38,21 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
         if (userData.profileFullyLoaded) return;
 
+        // Estoy teniendo problemas con el creado del perfil por poner el nombre en el register
+        // Debería crear el trigger
+        // Si me sobra tiempo lo intento pero no creo porque estoy escribiendo esto a las 00:35 del mismo Jueves que se entrega
+        // El nombre va a tardar en aparecer
+        // Profe teneme paciencia
         await getUserProfileById(userData.id)
-            .then(profile => updateUserData({
+            .then(profile => {
+                if (!profile) return;
+                updateUserData({
                 name: profile.name,
                 bio: profile.bio,
                 profileFullyLoaded: true,
-            }))
+                })
+            }
+        )
     } else {
          updateUserData({
             id: null,

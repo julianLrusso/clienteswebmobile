@@ -29,7 +29,7 @@ export async function sendPosts({body}) {
  */
 export async function getAllPosts() {
 
-    const {data, error} = await supabase.from('public_posts').select().order('id', { ascending: false });
+    const {data, error} = await supabase.from('public_posts_with_profiles').select().order('id', { ascending: false });
 
     if (error) {
         throw new Error("Error al obtener las postulaciones. " + error.message);
