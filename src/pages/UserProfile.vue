@@ -24,7 +24,14 @@ export default {
 </script>
 
 <template>
+  <div class="flex mb-4 justify-between">
     <h1 class="text-3xl mb-4">Perfil de {{ user.name }}</h1>
+
+    <RouterLink class="bg-transparent hover:bg-indigo-800 text-indigo-950 font-semibold hover:text-white py-2 px-4 border border-indigo-800 hover:border-transparent rounded" 
+      :to="`/usuario/${user.id}/chat`">
+        Chatear
+    </RouterLink>
+  </div>
 
   <AlertMessage v-if="error" :text="error" color-classes="bg-red-100 border-red-600 text-red-800" class="mb-4" />
 

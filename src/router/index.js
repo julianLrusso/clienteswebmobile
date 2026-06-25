@@ -7,6 +7,7 @@ import EditProfile from '@/pages/EditProfile.vue';
 import { createRouter, createWebHistory } from 'vue-router'
 import { subscribeToAuthStateChanges } from '@/services/auth';
 import UserProfile from '@/pages/UserProfile.vue';
+import PrivateChat from '@/pages/PrivateChat.vue';
 
 const routes = [
   {path: '/', component: Home},
@@ -16,6 +17,7 @@ const routes = [
   {path: '/perfil', component: Profile, meta: {auth: true}},
   {path: '/editar-perfil', component: EditProfile, meta: {auth: true}},
   {path: '/usuario/:id', component: UserProfile, meta: {auth: true}},
+  {path: '/usuario/:id/chat', component: PrivateChat, meta: {auth: true}},
 ];
 
 const router = createRouter({
